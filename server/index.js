@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import router from "./router/routes.js";
+import contactRouter from "./router/contact.routes.js";
 
 dotenv.config({
   path: "./.env",
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/auth", router);
+app.use("/api/contacts", contactRouter);
 
 // app.get(PORT, () => {
 //   console.log(`Server is running on port: ${PORT}`);

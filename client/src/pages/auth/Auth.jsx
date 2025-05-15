@@ -48,18 +48,22 @@ function Auth() {
   };
 
   const handleLogin = async () => {
+    // console.log(validateLogin());
     if (validateLogin()) {
       const response = await apiClient.post(
         LOGIN_ROUTES,
         { email, password },
         { withCredentials: true }
       );
+
+      // console.log(response);
       if (response.data.user.id) {
+        // console.log(response.data.user.id);
         setUserInfo(response.data.user);
         if (response.data.user.profileSetup) navigate("/chat");
         else navigate("/profile");
       }
-      console.log({ response });
+      // console.log({ response });
     }
   };
 

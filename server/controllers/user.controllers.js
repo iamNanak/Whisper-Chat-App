@@ -60,8 +60,8 @@ const login = async (req, res, next) => {
 
     res.cookie("jwt", createToken(email, user.id), {
       maxAge,
+      httpOnly: true,
       secure: true,
-      sameSite: "None",
     });
 
     return res.status(200).json({
@@ -76,8 +76,17 @@ const login = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     return res.status(400).send("Login Failed");
+  }
+};
+
+const logout = async (req, res) => {
+  try {
+    res.cookie("jwt", "", { maxAge: 1, secure: true, sameSite: "None" });
+    res.status(200).send("Logout Successfully");
+  } catch ({ error }) {
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -97,7 +106,7 @@ const getUserInfo = async (req, res, next) => {
       color: user.color,
     });
   } catch (error) {
-    console.log({ error });
+    // console.log({ error });
     return res.status(500).send("Problem in getting User Info");
   }
 };
@@ -189,6 +198,7 @@ const deleteProfileImage = async (req, res) => {
 export {
   signup,
   login,
+  logout,
   getUserInfo,
   updateInfo,
   uploadProfileImage,

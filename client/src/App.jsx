@@ -27,7 +27,7 @@ const App = () => {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const response = await apiClient(GET_USER_INFO, {
+        const response = await apiClient.get(GET_USER_INFO, {
           withCredentials: true,
         });
         if (response.status == 200 && response.data.id) {
@@ -35,10 +35,10 @@ const App = () => {
         } else {
           setUserInfo(undefined);
         }
-        console.log({ response });
+        // console.log({ response });
       } catch (error) {
+        // console.log({ error });
         setUserInfo(undefined);
-        console.log({ error });
       } finally {
         setLoading(false);
       }
