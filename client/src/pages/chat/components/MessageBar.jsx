@@ -1,14 +1,18 @@
+import { useAppStore } from "@/store/store";
 import EmojiPicker from "emoji-picker-react";
 import { useEffect, useRef, useState } from "react";
 import { GrAttachment } from "react-icons/gr";
 import { IoSend } from "react-icons/io5";
 import { RiEmojiStickerLine } from "react-icons/ri";
+import { useSocket } from "./SocketContext";
 
 const MessageBar = () => {
   const [message, setMessage] = useState("");
   const refEmoji = useRef(null);
   const refInput = useRef(null);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const { selectedChatType, selectedChatData, userInfo } = useAppStore();
+  const socket = useSocket();
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -23,7 +27,18 @@ const MessageBar = () => {
     };
   }, [refEmoji]);
 
-  const handleSendMessage = async () => {};
+  const handleSendMessage = async () => {
+    if (selectedChatType === "contact") {
+      socket.emit("sendMessage", {
+        sender: userInfo.id,
+        content: message,
+        recipient: selectedChatData._id,
+        messageType: "text",
+        fileUrl: undefined,
+      });
+    }
+    setMessage("");
+  };
 
   const handleEmoji = (emoji) => {
     setMessage((msg) => msg + emoji.emoji);

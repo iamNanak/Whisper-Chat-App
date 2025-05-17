@@ -19,6 +19,7 @@ function Auth() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  console.log(useAppStore.getState());
   const validateSignup = () => {
     if (email.trim() == "") {
       toast.error("Email is required.");

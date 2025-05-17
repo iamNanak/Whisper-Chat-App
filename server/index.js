@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import router from "./router/routes.js";
 import contactRouter from "./router/contact.routes.js";
+import socket from "./socket.js";
 
 dotenv.config({
   path: "./.env",
@@ -23,15 +24,15 @@ app.use(
     credentials: true,
   })
 );
-app.use("uploads/profiles", express.static("uploads/profiles"));
+app.use("/uploads/profiles", express.static("uploads/profiles"));
 app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/auth", router);
 app.use("/api/contacts", contactRouter);
 
-// app.get(PORT, () => {
-//   console.log(`Server is running on port: ${PORT}`);
+// const server = app.listen(PORT, () => {
+//   console.log(`Server is listening at http://localhost:${PORT}`);
 // });
 
 const connectDB = async () => {
@@ -51,9 +52,10 @@ const connectDB = async () => {
 
 connectDB()
   .then(() => {
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`Server is running at port : ${PORT}`);
     });
+    socket(server);
   })
   .catch((error) => {
     console.log("MONGODB connection failed", error);

@@ -21,10 +21,13 @@ import { animationDefaultOptions, getColor } from "@/lib/utils";
 import { apiClient } from "@/lib/api-client";
 import { HOST, SEARCH_CONTACTS } from "@/util/constants";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { useAppStore } from "@/store/store";
 
 const NewDM = () => {
   const [openNewContactModal, setOpenNewContactModal] = useState(false);
   const [searchContact, setSearchContact] = useState([]);
+
+  const { setSelectedChatData, setSelectedChatType } = useAppStore();
 
   const searchContacts = async (searchContacts) => {
     try {
@@ -45,9 +48,14 @@ const NewDM = () => {
   };
 
   const selectContact = (contact) => {
+    // console.log(contact);
     setOpenNewContactModal(false);
     setSearchContact([]);
+    setSelectedChatType("contact");
+    setSelectedChatData(contact);
   };
+
+  // console.log(setSelectedChatData);
 
   return (
     <>
@@ -69,9 +77,9 @@ const NewDM = () => {
       <Dialog
         open={openNewContactModal}
         onOpenChange={setOpenNewContactModal}
-        className="rounded-full"
+        className="rounded-lg"
       >
-        <DialogContent className="bg-[#181920] border-none text-white flex flex-col w-[400px] h-[400px]">
+        <DialogContent className="rounded-lg bg-[#181920] border-none text-white flex flex-col w-[400px] h-[400px]">
           <DialogHeader>
             <DialogTitle>Please Select Contact</DialogTitle>
             <hr />
@@ -87,58 +95,63 @@ const NewDM = () => {
               onChange={(e) => searchContacts(e.target.value)}
             />
           </div>
-          <ScrollArea className="h-[250px]">
-            <div>
-              {searchContact.map((contact) => (
-                <div
-                  key={contact._id}
-                  className="flex gap-3 items-center
-              cursor-pointer mb-2"
-                  onClick={() => searchContact(contact)}
-                >
-                  <div className="relative w-12 h-12">
-                    <Avatar className="h-12 w-12 rounded-full overflow-hidden">
-                      {contact.image ? (
-                        <AvatarImage
-                          src={`${HOST}/${contact.image}`}
-                          alt="profile"
-                          className="object-cover w-full h-full bg-black border-2"
-                        />
-                      ) : (
-                        <div
-                          className={`uppercase h-12 w-12  text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
-                            contact.color
-                          )}`}
-                        >
-                          {contact.firstName
-                            ? contact.firstName.split("").shift()
-                            : contact.email.split("").shift()}
-                        </div>
-                      )}
-                    </Avatar>
+          {searchContact.length > 0 && (
+            <ScrollArea className="h-[250px]">
+              <div>
+                {searchContact.map((contact) => (
+                  <div
+                    key={contact._id}
+                    className="flex gap-3 items-center
+                cursor-pointer mb-2"
+                    onClick={() => selectContact(contact)}
+                  >
+                    <div
+                      className="relative w-12 h-12"
+                      onClick={() => searchContact(contact)}
+                    >
+                      <Avatar className="h-12 w-12 rounded-full overflow-hidden">
+                        {contact.image ? (
+                          <AvatarImage
+                            src={`${HOST}/${contact.image}`}
+                            alt="profile"
+                            className="object-cover w-full h-full bg-black border-2"
+                          />
+                        ) : (
+                          <div
+                            className={`uppercase h-12 w-12  text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
+                              contact.color
+                            )}`}
+                          >
+                            {contact.firstName
+                              ? contact.firstName.split("").shift()
+                              : contact.email.split("").shift()}
+                          </div>
+                        )}
+                      </Avatar>
+                    </div>
+                    <div className="flex flex-col">
+                      <span>
+                        {contact.firstName && contact.lastName
+                          ? `${contact.firstName}-${contact.lastName}`
+                          : contact.email}
+                      </span>
+                      <span className="text-xs">{contact.email}</span>
+                    </div>
+                    <hr />
                   </div>
-                  <div className="flex flex-col">
-                    <span>
-                      {contact.firstName && contact.lastName
-                        ? `${contact.firstName}-${contact.lastName}`
-                        : contact.email}
-                    </span>
-                    <span className="text-xs">{contact.email}</span>
-                  </div>
-                  <hr />
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
           {searchContact.length <= 0 && (
-            <div className="flex-1 md:bg-[#1c1d25] md:flex flex-col justify-center items-center duration-1000 transition-all rounded-xl">
+            <div className="flex-1  md:flex flex-col mt-5 justify-center items-center duration-1000 transition-all rounded-xl">
               <Lottie
                 isClickToPauseDisabled={true}
-                height={100}
-                width={100}
+                height={150}
+                width={150}
                 options={animationDefaultOptions}
               />
-              <div className="text-opacity-80 text-white flex flex-col gap-5 items-center mt-10 lg:text-2xl text-xl transition-all duration-300 text-center">
+              <div className="text-opacity-80 text-white flex flex-col gap-5 items-center mt-4 lg:text-2xl text-xl transition-all duration-300 text-center">
                 <h3 className="poppins-medium">
                   Hi<span className="text-purple-500">!</span> Search New{" "}
                   <span className="text-purple-500">Contact </span>
