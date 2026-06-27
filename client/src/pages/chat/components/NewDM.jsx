@@ -29,13 +29,13 @@ const NewDM = () => {
 
   const { setSelectedChatData, setSelectedChatType } = useAppStore();
 
-  const searchContacts = async (searchContacts) => {
+  const searchContacts = async (searchInput) => {
     try {
-      if (searchContacts.length > 0) {
+      if (searchInput.length > 0) {
         const res = await apiClient.post(
           SEARCH_CONTACTS,
-          { searchContacts },
-          { withCredentials: true }
+          { searchContacts: searchInput },
+          { withCredentials: true },
         );
 
         if (res.status === 200 && res.data.contacts) {
@@ -44,7 +44,9 @@ const NewDM = () => {
       } else {
         setSearchContact([]);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log({ error });
+    }
   };
 
   const selectContact = (contact) => {
@@ -119,7 +121,7 @@ const NewDM = () => {
                         ) : (
                           <div
                             className={`uppercase h-12 w-12  text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
-                              contact.color
+                              contact.color,
                             )}`}
                           >
                             {contact.firstName

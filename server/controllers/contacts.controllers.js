@@ -10,7 +10,7 @@ export const searchContacts = async (req, res) => {
 
     const cleanSearchToken = searchContacts.replace(
       /[.*+?^${}()|[\]\\]/g,
-      "\\$&"
+      "\\$&",
     );
 
     const regex = new RegExp(cleanSearchToken, "i");
@@ -23,5 +23,8 @@ export const searchContacts = async (req, res) => {
     });
 
     return res.status(200).json({ contacts });
-  } catch (error) {}
+  } catch (error) {
+    // console.log({ error });
+    return res.status(500).send("Internal Server Error");
+  }
 };

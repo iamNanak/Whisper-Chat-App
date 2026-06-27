@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Routes } from "react-router-dom";
-import Auth from "./pages/auth/auth";
+import Auth from "./pages/auth/Auth";
 import { Route } from "react-router-dom";
 import Chat from "./pages/chat/Chat";
 import Profile from "./pages/profile/Profile";
@@ -22,6 +22,7 @@ const AuthRoute = ({ children }) => {
 
 const App = () => {
   const { userInfo, setUserInfo } = useAppStore();
+  // console.log("userInfo", userInfo);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

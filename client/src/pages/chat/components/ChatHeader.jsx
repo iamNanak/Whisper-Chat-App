@@ -2,6 +2,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { getColor } from "@/lib/utils";
 import { useAppStore } from "@/store/store";
 import { RiCloseFill } from "react-icons/ri";
+import { HOST } from "@/util/constants";
 
 const ChatHeader = () => {
   const { closeChat, selectedChatData, selectedChatType } = useAppStore();
@@ -22,7 +23,7 @@ const ChatHeader = () => {
                 ) : (
                   <div
                     className={`uppercase h-12 w-12  text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
-                      selectedChatData.color
+                      selectedChatData.color,
                     )}`}
                   >
                     {selectedChatData.firstName

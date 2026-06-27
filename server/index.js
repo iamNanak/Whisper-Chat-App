@@ -22,7 +22,7 @@ app.use(
     origin: [process.env.ORIGIN],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-  })
+  }),
 );
 app.use("/uploads/profiles", express.static("uploads/profiles"));
 app.use(cookieParser());
@@ -38,10 +38,10 @@ app.use("/api/contacts", contactRouter);
 const connectDB = async () => {
   try {
     const connectionInstance = await mongoose.connect(
-      `${databaseURL}/${DB_NAME}`
+      `${databaseURL}/${DB_NAME}`,
     );
     console.log(
-      `\n MonogoDB connected !! DB HOST: ${connectionInstance.connection.host}`
+      `\n MongoDB connected !! DB HOST: ${connectionInstance.connection.host}`,
     );
     console.log(`http://localhost:${PORT}`);
   } catch (error) {
@@ -56,6 +56,7 @@ connectDB()
       console.log(`Server is running at port : ${PORT}`);
     });
     socket(server);
+    console.log("Socket server is running");
   })
   .catch((error) => {
     console.log("MONGODB connection failed", error);

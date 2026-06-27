@@ -54,10 +54,10 @@ function Auth() {
       const response = await apiClient.post(
         LOGIN_ROUTES,
         { email, password },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
-      // console.log(response);
+      // console.log("response", response);
       if (response.data.user.id) {
         // console.log(response.data.user.id);
         setUserInfo(response.data.user);
@@ -76,7 +76,7 @@ function Auth() {
           email,
           password,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (response.status === 200) {
         setUserInfo(response.data.user);

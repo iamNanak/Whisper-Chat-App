@@ -128,7 +128,7 @@ const updateInfo = async (req, res) => {
         color,
         profileSetup: true,
       },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     return res.status(200).json({
@@ -161,7 +161,7 @@ const uploadProfileImage = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.userId,
       { image: fileName },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     return res.status(200).json({

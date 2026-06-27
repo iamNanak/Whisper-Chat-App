@@ -1,8 +1,8 @@
-import { Server as SocketIO } from "socket.io";
+import { Server as SocketIOServer } from "socket.io";
 import Message from "./models/message.model.js";
 
 const socket = (server) => {
-  const io = new SocketIO(server, {
+  const io = new SocketIOServer(server, {
     cors: {
       origin: process.env.ORIGIN,
       methods: ["GET", "POST"],
