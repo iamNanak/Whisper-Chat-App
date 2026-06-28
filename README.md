@@ -141,11 +141,3 @@ Key server files:
 This repository does not include a license file. Add one if you plan to publish.
 
 ---
-
-If you'd like, I can also:
-
-- add example `.env.example` to `server/`
-- update cookies to be development-friendly
-- add simple deployment notes or a Dockerfile
-
-File updated: [README.md](README.md)
