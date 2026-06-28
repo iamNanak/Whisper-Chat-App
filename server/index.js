@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import router from "./router/routes.js";
 import contactRouter from "./router/contact.routes.js";
+import messagesRouter from "./router/messages.routes.js";
 import socket from "./socket.js";
 
 dotenv.config({
@@ -25,11 +26,13 @@ app.use(
   }),
 );
 app.use("/uploads/profiles", express.static("uploads/profiles"));
+app.use("/uploads/files", express.static("uploads/files"));
 app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/auth", router);
 app.use("/api/contacts", contactRouter);
+app.use("/api/messages", messagesRouter);
 
 // const server = app.listen(PORT, () => {
 //   console.log(`Server is listening at http://localhost:${PORT}`);

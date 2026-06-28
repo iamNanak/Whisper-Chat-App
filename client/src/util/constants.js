@@ -12,3 +12,9 @@ export const DELETE_PROFILE_IMAGE = `${AUTH_ROUTES}/remove-profile-image`;
 
 export const CONTACT_ROUTES = "api/contacts";
 export const SEARCH_CONTACTS = `${CONTACT_ROUTES}/search`;
+export const GET_ALL_CONTACTS = `${CONTACT_ROUTES}/all-contacts`;
+export const GET_ALL_CONTACTS_FOR_CHANNELS = `${CONTACT_ROUTES}/all-contacts-for-channels`;
+
+export const MESSAGES_ROUTES = "api/messages";
+export const GET_ALL_MESSAGES = `${MESSAGES_ROUTES}/get-messages`;
+export const UPLOAD_FILES = `${MESSAGES_ROUTES}/upload-files`;

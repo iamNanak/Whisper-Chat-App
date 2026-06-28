@@ -25,9 +25,10 @@ router.post(
   "/upload-profile-image",
   verfiyToken,
   upload.single("profile-image"),
-  uploadProfileImage
+  uploadProfileImage,
 );
 
 router.delete("/remove-profile-image", verfiyToken, deleteProfileImage);
 router.post("/logout", logout);
+
 export default router;

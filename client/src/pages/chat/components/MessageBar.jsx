@@ -5,13 +5,22 @@ import { GrAttachment } from "react-icons/gr";
 import { IoSend } from "react-icons/io5";
 import { RiEmojiStickerLine } from "react-icons/ri";
 import { useSocket } from "./SocketContext";
+import { apiClient } from "@/lib/api-client";
+import { UPLOAD_FILES } from "@/util/constants";
 
 const MessageBar = () => {
   const [message, setMessage] = useState("");
   const refEmoji = useRef(null);
   const refInput = useRef(null);
+  const refFileInput = useRef(null);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
-  const { selectedChatType, selectedChatData, userInfo } = useAppStore();
+  const {
+    selectedChatType,
+    selectedChatData,
+    userInfo,
+    setIsUploading,
+    setFileUploadProgress,
+  } = useAppStore();
   const socket = useSocket();
 
   useEffect(() => {
@@ -46,6 +55,53 @@ const MessageBar = () => {
     refInput.current?.focus();
   };
 
+  const handleAttachmentClick = () => {
+    if (!refFileInput.current) return;
+    refFileInput.current?.click();
+  };
+
+  const handleAttachmentChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setIsUploading(true);
+      const response = await apiClient.post(UPLOAD_FILES, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+        onUploadProgress: (progressEvent) => {
+          console.log("progressEvent", progressEvent);
+          setFileUploadProgress(
+            Math.round((progressEvent.loaded * 100) / progressEvent.total),
+          );
+        },
+      });
+
+      if (response.status === 200 && response.data.filePaths) {
+        setIsUploading(false);
+        const fileUrl = response.data.filePaths;
+
+        if (selectedChatType === "contact") {
+          socket.emit("sendMessage", {
+            sender: userInfo.id,
+            content: undefined,
+            recipient: selectedChatData._id,
+            messageType: "file",
+            fileUrl,
+          });
+        }
+      }
+    } catch (error) {
+      setIsUploading(false);
+      console.error("Error uploading file:", error);
+    }
+  };
+
   return (
     <div className="h-[10vh] bg-[#1c1d25] flex justify-center items-center px-8 mb-4 gap-3">
       <div className="flex-1 flex bg-[#2a2b33] rounded-full items-center gap-3 pr-5">
@@ -57,9 +113,18 @@ const MessageBar = () => {
           onChange={(e) => setMessage(e.target.value)}
           ref={refInput}
         />
-        <button className="text-neutral-500 focus:border-none focus:outline-none foucs:text-white duration-300 transition-all">
+        <button
+          onClick={handleAttachmentClick}
+          className="text-neutral-500 focus:border-none focus:outline-none foucs:text-white duration-300 transition-all"
+        >
           <GrAttachment className="text-xl" />
         </button>
+        <input
+          type="file"
+          ref={refFileInput}
+          className="hidden"
+          onChange={handleAttachmentChange}
+        />
         <div className="relative">
           <button
             className="text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all"

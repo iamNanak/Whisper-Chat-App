@@ -1,7 +1,36 @@
+import { useEffect, useState } from "react";
 import NewDM from "./NewDM";
 import ProfileInfo from "./ProfileInfo";
+import { GET_ALL_CONTACTS } from "@/util/constants";
+import { apiClient } from "@/lib/api-client";
+import { useAppStore } from "@/store/store";
+import ContactList from "./ContactList";
+import ChannelsDM from "../channels/ChannelsDM";
 
 const ContactContainer = () => {
+  const { setDirectMessagesContacts, directMessagesContacts } = useAppStore();
+
+  console.log("directMessagesContacts", directMessagesContacts);
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        const response = await apiClient.get(GET_ALL_CONTACTS, {
+          withCredentials: true,
+        });
+
+        console.log("res", response);
+
+        if (response.data.contacts) {
+          console.log(response.data.contacts);
+          setDirectMessagesContacts(response.data.contacts);
+        }
+      } catch (error) {}
+    };
+
+    fetchContacts();
+  }, []);
+
   return (
     <div className="relative md:w-[35vw] xl:w-[20vw] bg-[#1b1c24] border-r-2 border-[#2f303b] w-full">
       <div className="flex justify-self-auto items-center">
@@ -16,10 +45,15 @@ const ContactContainer = () => {
           <Title text="Direct Messages" />
           <NewDM />
         </div>
+
+        <div className="max-h-[38vh] overflow-y-auto scrollbar-hidden">
+          <ContactList contact={directMessagesContacts} />
+        </div>
       </div>
       <div className="my-5">
         <div className="flex items-center justify-between pr-10">
           <Title text="Channels" />
+          <ChannelsDM />
         </div>
       </div>
 
